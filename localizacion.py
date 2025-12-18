@@ -276,20 +276,20 @@ for punto in objetivos:
 
 toc = time.time()
 
-# ===== MÉTRICAS REQUERIDAS =====
-# 1. Tiempo de ejecución
-tiempo_total = toc - tic
+# # ===== MÉTRICAS REQUERIDAS =====
+# # 1. Tiempo de ejecución
+# tiempo_total = toc - tic
 
-# 2. Desviación acumulada (suma de diferencias pose a pose entre real e ideal)
-desviacion_total = 0.0
-for i in range(min(len(tray_real), len(tray_ideal))):
-  # Desviación como suma de diferencias en x, y, theta (escalar)
-  diff = np.subtract(tray_real[i], tray_ideal[i])
-  desviacion_total += abs(diff[0]) + abs(diff[1]) + abs(diff[2])
+# # 2. Desviación acumulada (suma de diferencias pose a pose entre real e ideal)
+# desviacion_total = 0.0
+# for i in range(min(len(tray_real), len(tray_ideal))):
+#   # Desviación como suma de diferencias en x, y, theta (escalar)
+#   diff = np.subtract(tray_real[i], tray_ideal[i])
+#   desviacion_total += abs(diff[0]) + abs(diff[1]) + abs(diff[2])
 
-# 3. Distancia al objetivo final
-distancia_final = distanciaObjetivos[-1] if distanciaObjetivos else 0.0
-suma_distancias = np.sum(distanciaObjetivos) if distanciaObjetivos else 0.0
+# # 3. Distancia al objetivo final
+# distancia_final = distanciaObjetivos[-1] if distanciaObjetivos else 0.0
+# suma_distancias = np.sum(distanciaObjetivos) if distanciaObjetivos else 0.0
 
 # Mostrar resultados
 if len(tray_ideal) > 1000:
