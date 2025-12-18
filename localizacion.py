@@ -59,9 +59,8 @@ def calcular_error(real, ideal, balizas):
   """
   Calcula el error entre el robot real e ideal usando solo sensores.
   Retorna el error normalizado (promedio de errores de distancia + error angular).
-  NO accede directamente a las variables de posición - solo usa sensores.
   """
-  # Obtener medidas sensoriales del robot real (lo único que podemos "observar")
+  # Obtener medidas sensoriales del robot real (lo único que podemos observar)
   distancias_real = real.senseDistance(balizas)
   angulo_real = real.senseAngle(balizas)
   
@@ -90,17 +89,8 @@ def localizacion(balizas, real, ideal, centro, radio, step=0.1, mostrar=False):
   """
   Buscar la localización más probable del robot, a partir de su sistema
   sensorial, dentro de una región cuadrada de centro "centro" y lado "2*radio".
-  
-  Parámetros:
-    balizas: lista de posiciones de balizas fijas [[x1,y1], [x2,y2], ...]
-    real: robot real (solo accesible por sensores)
-    ideal: robot ideal que vamos a reposicionar
-    centro: [x, y, theta] centro de la región de búsqueda
-    radio: radio de búsqueda (región será 2*radio x 2*radio)
-    step: tamaño de la rejilla (más fino = más preciso pero más lento)
-    mostrar: si True, muestra mapa de calor de la búsqueda
   """
-  # Matriz para almacenar los errores en cada punto (para visualización)
+  # Matriz para almacenar los errores en cada punto 
   imagen = []
   
   # Mejor punto encontrado (inicializamos con error infinito)
@@ -114,10 +104,10 @@ def localizacion(balizas, real, ideal, centro, radio, step=0.1, mostrar=False):
   num_orientaciones = 10
   orientaciones = np.linspace(-pi, pi, num_orientaciones, endpoint=False)
   
-  # Crear rejilla de búsqueda en Y (filas)
+  # Crear rejilla de búsqueda en Y 
   for y in np.arange(centro[1]-radio, centro[1]+radio+step/2, step):
     fila = []
-    # Crear rejilla de búsqueda en X (columnas)
+    # Crear rejilla de búsqueda en X 
     for x in np.arange(centro[0]-radio, centro[0]+radio+step/2, step):
       # Para cada punto (x,y), probar diferentes orientaciones
       mejor_error_celda = float('inf')
@@ -127,7 +117,7 @@ def localizacion(balizas, real, ideal, centro, radio, step=0.1, mostrar=False):
         # Posicionar robot ideal en el punto de prueba
         ideal.set(x, y, theta)
         
-        # Calcular error usando SOLO sensores (no accediendo a pose directamente)
+        # Calcular error usando SOLO sensores
         error = calcular_error(real, ideal, balizas)
         
         # Guardar la mejor orientación para esta celda
@@ -195,12 +185,12 @@ if len(sys.argv)<2 or int(sys.argv[1])<0 or int(sys.argv[1])>=len(trayectorias):
 objetivos = trayectorias[int(sys.argv[1])]
 
 # Definición de balizas fijas (puntos de referencia para localización)
-# balizas = [[0, 0], [0, 4], [4, 0], [4, 4]]  # Comentado
-balizas = objetivos  # Ahora apuntan a lo mismo
+# balizas = [[0, 0], [0, 4], [4, 0], [4, 4]] 
+balizas = objetivos  # Creo que así era como lo pedian en clase
 
 # Definición de constantes:
 EPSILON = .1                # Umbral de distancia para alcanzar objetivo
-DEVIATION_THRESHOLD = 0.3   # Umbral de desviación para relocalizar (metros)
+DEVIATION_THRESHOLD = 0.3   # Umbral de desviación para relocalizar 
 V = V_LINEAL/FPS            # Metros por fotograma
 W = V_ANGULAR*pi/(180*FPS)  # Radianes por fotograma
 
@@ -275,21 +265,6 @@ for punto in objetivos:
 
 
 toc = time.time()
-
-# # ===== MÉTRICAS REQUERIDAS =====
-# # 1. Tiempo de ejecución
-# tiempo_total = toc - tic
-
-# # 2. Desviación acumulada (suma de diferencias pose a pose entre real e ideal)
-# desviacion_total = 0.0
-# for i in range(min(len(tray_real), len(tray_ideal))):
-#   # Desviación como suma de diferencias en x, y, theta (escalar)
-#   diff = np.subtract(tray_real[i], tray_ideal[i])
-#   desviacion_total += abs(diff[0]) + abs(diff[1]) + abs(diff[2])
-
-# # 3. Distancia al objetivo final
-# distancia_final = distanciaObjetivos[-1] if distanciaObjetivos else 0.0
-# suma_distancias = np.sum(distanciaObjetivos) if distanciaObjetivos else 0.0
 
 # Mostrar resultados
 if len(tray_ideal) > 1000:
